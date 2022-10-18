@@ -1,5 +1,6 @@
 let gameboard = ["", "", "", "", "", "", "", "", ""];
 
+// GAME MODULE
 const game = (() => {
   const updateGameboard = () => {
     gameboard.forEach((square, index) => {
@@ -18,6 +19,23 @@ const game = (() => {
   };
 
   const checkForGameEnd = () => {
+    /*
+    !  ⠀⠀⠀⠀⣀⠤⠔⠒⠒⠒⠒⠒⠒⠒⠦⢄⣀⠀⠀⠀⠀
+    !  ⠀⢀⡴⠋⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠑⢄⠀⠀
+    !  ⢀⠎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢣⠀
+    !  ⢸⠀⡄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢢⠈⡇
+    !  ⢸⠀⣇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡼⠀⡇
+    !  ⠘⡆⢸⠀⢀⣀⣤⣄⡀⠀⠀⠀⢀⣤⣤⣄⡀⠀⡇⡸⠀
+    !  ⠀⠘⣾⠀⣿⣿⣿⣿⣿⠀⠀⠀⣿⣿⣿⣿⣿⠀⡗⠁⠀
+    !  ⠀⠀⣿⠀⠙⢿⣿⠿⠃⢠⢠⡀⠙⠿⣿⠿⠃⠀⡇⠀⠀
+    !  ⠀⠀⠘⣄⡀⠀⠀⠀⢠⣿⢸⣿⠀⠀⠀⠀⠀⣠⠇⠀⠀
+    !  ⠀⠀⠀⠀⡏⢷⡄⠀⠘⠟⠈⠿⠁⠀⢠⡞⡹⠁⠀⠀⠀
+    !  ⠀⠀⠀⠀⢹⠸⠘⢢⢠⠤⠤⡤⡄⢰⢡⠁⡇⠀⠀⠀⠀
+    !  ⠀⠀⠀⠀⢸⠀⠣⣹⢸⠒⠒⡗⡇⣩⠌⢀⡇⠀⠀⠀⠀
+    !  ⠀⠀⠀⠀⠈⢧⡀⠀⠉⠉⠉⠉⠁⠀⣀⠜⠀⠀⠀⠀⠀
+    !  ⠀⠀⠀⠀⠀⠀⠉⠓⠢⠤⠤⠤⠔⠊⠁⠀⠀⠀⠀⠀⠀
+   */
+
     if (
       (gameboard[0] === gameboard[1] &&
         gameboard[0] === gameboard[2] &&
@@ -56,24 +74,7 @@ const game = (() => {
     }
   };
 
-  return {
-    updateGameboard,
-    checkForGameEnd,
-    restart,
-  };
-})();
-
-let squares = document.querySelectorAll(".square");
-let gameMessage = document.querySelector(".game-message");
-let restartBtn = document.querySelector(".restart");
-
-restartBtn.addEventListener("click", () => {
-  game.restart();
-});
-
-let mark = "X";
-for (const square of squares) {
-  square.addEventListener("click", (e) => {
+  const playRound = (e) => {
     if (!e.target.innerHTML) {
       if (mark === "X") {
         e.target.innerHTML = mark;
@@ -84,7 +85,28 @@ for (const square of squares) {
       }
       gameMessage.innerHTML = `Player ${mark}'s turn`;
     }
-    game.updateGameboard();
-    game.checkForGameEnd();
-  });
-}
+    updateGameboard();
+    checkForGameEnd();
+  };
+
+  return {
+    updateGameboard,
+    checkForGameEnd,
+    restart,
+    playRound,
+  };
+})();
+
+// INTERFACE
+let squares = document.querySelectorAll(".square");
+let gameMessage = document.querySelector(".game-message");
+let restartBtn = document.querySelector(".restart");
+let mark = "X";
+
+restartBtn.addEventListener("click", () => {
+  game.restart();
+});
+
+squares.forEach((square) => {
+  square.addEventListener("click", (e) => game.playRound(e));
+});
